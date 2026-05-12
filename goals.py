@@ -123,6 +123,22 @@ def return_menu():
         root.destroy()
         sub.Popen([sys.executable, menu_path, nric_signin])
 
+#adding to create table first before fetching if empty 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(script_dir, 'healthify.db')
+connection = sq.connect(db_path)
+cursor = connection.cursor()
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS goals(
+        NRIC CHAR(9), 
+        goal_name VARCHAR(30), 
+        goal_unit VARCHAR(10), 
+        current_prog INT, 
+        max_prog INT
+    )
+''')
+connection.commit()
+connection.close()
 fetch_and_display_goals()
 
 add_goal_frame = tk.Frame(root, bg="#e0f7fa")
